@@ -33,7 +33,7 @@ class HorizontalList extends StatelessWidget {
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MovieDetailsScreen(
+                    builder: (context) => MovieDetailsScreen(movie: movies[index],
                       index: movie.id.toString(),
                     ),
                   ),

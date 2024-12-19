@@ -1,16 +1,34 @@
 import 'package:eat_easy_assignment/core/utils/imports.dart';
 import 'package:eat_easy_assignment/core/widgets/custom_button.dart';
+import 'package:eat_easy_assignment/features/movies/domain/entities/movie_list_entity.dart';
+import 'package:eat_easy_assignment/features/movies/presentation/blocs/movie_details/movie_details_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
-class MovieDetailsScreen extends StatelessWidget {
+class MovieDetailsScreen extends StatefulWidget {
+  final ResultEntity movie;
   final String index;
-  const MovieDetailsScreen({super.key, required this.index});
+  const MovieDetailsScreen(
+      {super.key, required this.index, required this.movie});
+
+  @override
+  State<MovieDetailsScreen> createState() => _MovieDetailsScreenState();
+}
+
+class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    context
+        .read<MovieDetailsBloc>()
+        .add(GetCastDetailsEvent(widget.movie.id ?? 0));
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          'Movie Title', // Replace with dynamic title
+          widget.movie.title ?? 'Movie Title', // Replace with dynamic title
           style: TextStyle(fontSize: 18.sp),
         ),
         centerTitle: true,
@@ -24,7 +42,7 @@ class MovieDetailsScreen extends StatelessWidget {
             children: [
               // Title Image with Border Decoration
               Hero(
-                tag: index,
+                tag: widget.index,
                 child: Container(
                   width: double.infinity, // Take full width
                   height: 200.h, // Adjust the height as needed
@@ -44,7 +62,9 @@ class MovieDetailsScreen extends StatelessWidget {
                   ),
                   clipBehavior: Clip.hardEdge,
                   child: Image.network(
-                    'https://via.placeholder.com/400x200.png', // Replace with the actual image URL
+                    widget.movie.backdropPath != null
+                        ? "https://image.tmdb.org/t/p/w200${widget.movie.backdropPath}"
+                        : 'https://via.placeholder.com/400x200.png', // Replace with the actual image URL
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -57,7 +77,10 @@ class MovieDetailsScreen extends StatelessWidget {
                   Icon(Icons.star, color: Colors.amber, size: 20.sp),
                   SizedBox(width: 8.w),
                   Text(
-                    '8.5/10', // Placeholder rating
+                    (widget.movie.voteAverage != null
+                            ? '${widget.movie.voteAverage!.toStringAsFixed(1)}/10'
+                            : '8.5/10')
+                        .toString(), // Placeholder rating
                     style:
                         TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
                   ),
@@ -72,7 +95,8 @@ class MovieDetailsScreen extends StatelessWidget {
               ),
               SizedBox(height: 4.h),
               Text(
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in venenatis enim. Sed aliquet nunc sit amet nisi blandit, non auctor tortor tincidunt. Aenean auctor dui vitae eros laoreet, ut malesuada urna dictum. Phasellus euismod felis vitae nulla dapibus, id vestibulum orci scelerisque. Integer ac maximus dui. Maecenas tincidunt ipsum vitae nulla volutpat, et pharetra erat ultricies. Curabitur varius hendrerit dui, sit amet varius ex accumsan in. Vivamus accumsan, ipsum vel bibendum tincidunt, elit sapien venenatis ipsum, id auctor lorem sapien ac risus.Sed sollicitudin nisi id leo vehicula, id congue augue ultricies. Integer sagittis augue at neque efficitur, at venenatis risus malesuada. Fusce sit amet turpis fringilla, efficitur purus sit amet, tincidunt mi. Ut sit amet magna ultricies, dignissim felis id, placerat nulla. Aliquam erat volutpat. Ut vitae velit non lectus aliquam viverra. Nulla ac ligula felis. Nam eget eros ac neque tincidunt vehicula. In vel lorem id risus euismod tincidunt. Curabitur faucibus eros eget felis elementum, eu convallis risus dictum.',
+                widget.movie.overview ??
+                    'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam in venenatis enim. Sed aliquet nunc sit amet nisi blandit, non auctor tortor tincidunt. Aenean auctor dui vitae eros laoreet, ut malesuada urna dictum. Phasellus euismod felis vitae nulla dapibus, id vestibulum orci scelerisque. Integer ac maximus dui. Maecenas tincidunt ipsum vitae nulla volutpat, et pharetra erat ultricies. Curabitur varius hendrerit dui, sit amet varius ex accumsan in. Vivamus accumsan, ipsum vel bibendum tincidunt, elit sapien venenatis ipsum, id auctor lorem sapien ac risus.Sed sollicitudin nisi id leo vehicula, id congue augue ultricies. Integer sagittis augue at neque efficitur, at venenatis risus malesuada. Fusce sit amet turpis fringilla, efficitur purus sit amet, tincidunt mi. Ut sit amet magna ultricies, dignissim felis id, placerat nulla. Aliquam erat volutpat. Ut vitae velit non lectus aliquam viverra. Nulla ac ligula felis. Nam eget eros ac neque tincidunt vehicula. In vel lorem id risus euismod tincidunt. Curabitur faucibus eros eget felis elementum, eu convallis risus dictum.',
                 style: TextStyle(fontSize: 14.sp),
                 maxLines: 5,
                 overflow: TextOverflow.ellipsis,
@@ -85,37 +109,78 @@ class MovieDetailsScreen extends StatelessWidget {
                 style: TextStyle(fontSize: 16.sp, fontWeight: FontWeight.bold),
               ),
               SizedBox(height: 8.h),
-              SizedBox(
-                height: 120.h,
-                child: ListView.separated(
-                  scrollDirection: Axis.horizontal,
-                  itemCount: 5, // Placeholder for number of cast members
-                  separatorBuilder: (_, __) => SizedBox(width: 10.w),
-                  itemBuilder: (context, index) {
-                    return Column(
-                      children: [
-                        // Cast Image (Placeholder)
-                        Container(
-                          width: 60.w,
-                          height: 60.h,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[400],
-                            borderRadius: BorderRadius.circular(30.r),
-                          ),
-                        ),
-                        SizedBox(height: 8.h),
-                        // Cast Name (Placeholder)
-                        Text(
-                          'Actor $index', // Placeholder actor name
-                          style: TextStyle(
-                              fontSize: 12.sp, fontWeight: FontWeight.bold),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
+              // Inside the Column, replace the Cast Section with this:
+              BlocBuilder<MovieDetailsBloc, MovieDetailsState>(
+                builder: (context, state) {
+                  if (state is MovieDetailsLoading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
-                  },
-                ),
+                  } else if (state is MovieDetailsLoaded) {
+                    final castList =
+                        state.cast; // Assuming cast is a list in your state
+                    if (castList.isEmpty) {
+                      return Center(
+                        child: Text(
+                          'No cast details available',
+                          style: TextStyle(fontSize: 14.sp),
+                        ),
+                      );
+                    }
+                    return SizedBox(
+                      height: 120.h,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: castList.length,
+                        separatorBuilder: (_, __) => SizedBox(width: 10.w),
+                        itemBuilder: (context, index) {
+                          final castMember = castList[index];
+                          return Column(
+                            children: [
+                              // Cast Image
+                              Container(
+                                width: 60.w,
+                                height: 60.h,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(30.r),
+                                  image: castMember.profilePath != null
+                                      ? DecorationImage(
+                                          image: NetworkImage(
+                                            'https://image.tmdb.org/t/p/w200${castMember.profilePath}',
+                                          ),
+                                          fit: BoxFit.cover,
+                                        )
+                                      : null,
+                                  color: Colors.grey[400],
+                                ),
+                              ),
+                              SizedBox(height: 8.h),
+                              // Cast Name
+                              Text(
+                                castMember.name ?? 'Unknown',
+                                style: TextStyle(
+                                    fontSize: 12.sp,
+                                    fontWeight: FontWeight.bold),
+                                textAlign: TextAlign.center,
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    );
+                  } else if (state is MovieDetailsError) {
+                    return Center(
+                      child: Text(
+                        'Failed to load cast details.',
+                        style: TextStyle(fontSize: 14.sp, color: Colors.red),
+                      ),
+                    );
+                  }
+                  return const SizedBox
+                      .shrink(); // Fallback in case of an unexpected state
+                },
               ),
+
               SizedBox(height: 16.h),
 
               // Buttons for Add to Favorites and Add to Watchlist

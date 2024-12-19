@@ -59,6 +59,7 @@ class _MoviesListState extends State<MoviesList> {
                 context,
                 MaterialPageRoute(
                   builder: (context) => MovieDetailsScreen(
+                    movie: widget.movies[index],
                     index: movie.id.toString(),
                   ),
                 ),

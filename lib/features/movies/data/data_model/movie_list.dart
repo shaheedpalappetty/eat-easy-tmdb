@@ -27,8 +27,8 @@ class MovieList {
   // Function to convert to entity
   MovieListEntity toEntity() {
     return MovieListEntity(
-      page: this.page,
-      results: this.results?.map((result) => result.toEntity()).toList(),
+      page: page,
+      results: results?.map((result) => result.toEntity()).toList(),
     );
   }
 }

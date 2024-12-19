@@ -1,7 +1,4 @@
-import 'package:eat_easy_assignment/core/constants/app_colors.dart';
 import 'package:eat_easy_assignment/core/utils/imports.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class PaginationWidget extends StatelessWidget {
   final int currentPage;
@@ -66,8 +63,6 @@ class PaginationWidget extends StatelessWidget {
 
   Widget _buildPageButton(int page) {
     final isSelected = page == currentPage;
-    Logger.log("Current Page $currentPage");
-    Logger.log("Page $page");
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 4.w),
       child: InkWell(

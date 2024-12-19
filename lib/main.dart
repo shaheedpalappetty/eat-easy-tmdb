@@ -2,6 +2,7 @@
 import 'package:eat_easy_assignment/core/utils/imports.dart';
 import 'package:eat_easy_assignment/features/movies/data/movies_repository_impl.dart';
 import 'package:eat_easy_assignment/features/movies/domain/movies_repository.dart';
+import 'package:eat_easy_assignment/features/movies/presentation/blocs/movie_details/movie_details_bloc.dart';
 import 'package:eat_easy_assignment/features/movies/presentation/blocs/movies/movies_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,11 @@ class MyApp extends StatelessWidget {
             create: (context) => MoviesBloc(
               context.read<MoviesRepository>(),
             )..add(FetchMovies()),
+          ),
+          BlocProvider<MovieDetailsBloc>(
+            create: (context) => MovieDetailsBloc(
+              repository: context.read<MoviesRepository>(),
+            ),
           ),
         ],
         child: MaterialApp(
