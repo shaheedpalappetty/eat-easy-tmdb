@@ -1,0 +1,9 @@
+export 'package:flutter/material.dart';
+export 'package:flutter_screenutil/flutter_screenutil.dart';
+export 'package:eat_easy_assignment/core/constants/app_colors.dart';
+export 'package:eat_easy_assignment/core/utils/screen_util.dart';
+export 'package:eat_easy_assignment/features/movies/presentation/screen/movie_list.dart';
+export 'package:eat_easy_assignment/core/utils/app_theme.dart';
+export 'package:eat_easy_assignment/features/movies/presentation/widgets/horizontal_list.dart';
+export 'package:eat_easy_assignment/features/movies/presentation/widgets/movies_list.dart';
+export 'package:eat_easy_assignment/features/movies/presentation/screen/movie_details_screen.dart';

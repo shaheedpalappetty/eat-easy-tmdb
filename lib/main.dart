@@ -1,6 +1,7 @@
-import 'package:flutter/material.dart';
+import 'package:eat_easy_assignment/core/utils/imports.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -9,13 +10,17 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ScreenUtilInit(
+      designSize: const Size(375, 812),
+      minTextAdapt: true,
+      splitScreenMode: true,
+      builder: (_, child) => MaterialApp(
+        debugShowCheckedModeBanner: false,
+        title: 'Movie App',
+        themeMode: ThemeMode.dark,
+        darkTheme: AppTheme.darkTheme,
+        home: const MovieListScreen(),
       ),
-      home: const Placeholder(),
     );
   }
 }
