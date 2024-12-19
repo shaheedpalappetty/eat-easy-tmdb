@@ -1,6 +1,5 @@
 // lib/core/theme/app_theme.dart
 
-
 import 'package:eat_easy_assignment/core/utils/imports.dart';
 
 class AppTheme {
