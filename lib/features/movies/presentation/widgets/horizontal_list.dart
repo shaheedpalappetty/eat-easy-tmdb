@@ -53,7 +53,7 @@ class HorizontalList extends StatelessWidget {
                   MaterialPageRoute(
                     builder: (context) => MovieDetailsScreen(
                       movie: movies[index],
-                      index: movie.id.toString(),
+                      tag: movie.id.toString(),
                     ),
                   ),
                 ),

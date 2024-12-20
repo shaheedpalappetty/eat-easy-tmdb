@@ -3,6 +3,8 @@ import 'package:eat_easy_assignment/core/utils/imports.dart';
 import 'package:eat_easy_assignment/features/movies/data/datasources/auth_local_datasource.dart';
 import 'package:eat_easy_assignment/features/movies/data/datasources/auth_remote_datasource.dart';
 import 'package:eat_easy_assignment/features/movies/data/datasources/auth_state_manager.dart';
+import 'package:eat_easy_assignment/features/movies/data/repository/auth_local_datasource_impl.dart';
+import 'package:eat_easy_assignment/features/movies/data/repository/auth_remote_datasource_impl.dart';
 import 'package:eat_easy_assignment/features/movies/data/repository/auth_repository_impl.dart';
 import 'package:eat_easy_assignment/features/movies/data/repository/movies_repository_impl.dart';
 import 'package:eat_easy_assignment/features/movies/domain/movies_repository.dart';

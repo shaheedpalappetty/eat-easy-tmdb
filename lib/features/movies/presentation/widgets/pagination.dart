@@ -83,7 +83,8 @@ class PaginationWidget extends StatelessWidget {
           child: Text(
             '$page',
             style: TextStyle(
-              color: isSelected ? Colors.white : Theme.of(context).primaryColor,
+              color:
+                  isSelected ? AppColors.black : Theme.of(context).primaryColor,
               fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
             ),
           ),

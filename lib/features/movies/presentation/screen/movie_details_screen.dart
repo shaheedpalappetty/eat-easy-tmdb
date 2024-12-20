@@ -9,9 +9,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
   final ResultEntity movie;
-  final String index;
+  final String tag;
   const MovieDetailsScreen(
-      {super.key, required this.index, required this.movie});
+      {super.key, required this.tag, required this.movie});
 
   @override
   State<MovieDetailsScreen> createState() => _MovieDetailsScreenState();
@@ -46,7 +46,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Hero(
-                tag: widget.index,
+                tag: widget.tag,
                 child: Container(
                   width: double.infinity, // Take full width
                   height: 200.h, // Adjust the height as needed
