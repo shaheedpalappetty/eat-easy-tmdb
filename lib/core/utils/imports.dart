@@ -11,5 +11,4 @@ export 'dart:convert';
 export 'dart:io';
 export 'package:eat_easy_assignment/core/exceptions/app_exception.dart';
 export 'package:eat_easy_assignment/core/logger/logger.dart';
-export 'package:eat_easy_assignment/core/utils/typedef.dart';
 export 'package:either_dart/either.dart';

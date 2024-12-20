@@ -13,7 +13,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl();
   @override
   Future<String> getRequestToken() async {
-    final response = await ApiService.getApi(
+    final response = await ApiService.get(
       '${NetworkRoutes.baserUrl}authentication/token/new', // Removed base URL as it should be handled in ApiService
     );
 
@@ -30,7 +30,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<String> createSession(String requestToken) async {
-    final response = await ApiService.postApi(
+    final response = await ApiService.post(
       '${NetworkRoutes.baserUrl}authentication/session/new',
       {'request_token': requestToken},
     );
@@ -48,7 +48,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<String> getAccountId(String sessionId) async {
-    final response = await ApiService.getApi(
+    final response = await ApiService.get(
       '${NetworkRoutes.baserUrl}account',
       queryParameters: {'session_id': sessionId},
     );

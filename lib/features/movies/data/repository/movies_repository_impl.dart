@@ -14,7 +14,7 @@ class MoviesRepositoryImpl implements MoviesRepository {
   final AuthLocalDataSource authLocalDataSource;
   @override
   Future<Either<AppException, MovieListEntity>> getMovies(int page) async {
-    final response = await ApiService.getApi(
+    final response = await ApiService.get(
         '${NetworkRoutes.baserUrl}${NetworkRoutes.fetchMovies}?include_adult=true&page=$page');
 
     return response.fold(
@@ -29,7 +29,7 @@ class MoviesRepositoryImpl implements MoviesRepository {
   @override
   Future<Either<AppException, MovieCastEntity>> getCastsDetails(
       int movieId) async {
-    final response = await ApiService.getApi(
+    final response = await ApiService.get(
         '${NetworkRoutes.baserUrl}${NetworkRoutes.getCastDetails}$movieId/credits?language=en-US');
 
     return response.fold(
@@ -42,11 +42,63 @@ class MoviesRepositoryImpl implements MoviesRepository {
   }
 
   @override
+  Future<Either<AppException, MovieListEntity>> getFavoriteMovies(
+      int page) async {
+    try {
+      final accountId = await authLocalDataSource.getAccountId();
+      final response = await ApiService.get(
+        '${NetworkRoutes.baserUrl}/account/$accountId/favorite/movies',
+        queryParameters: {
+          'language': 'en-US',
+          'page': page.toString(),
+          'sort_by': 'created_at.asc'
+        },
+      );
+
+      return response.fold(
+        (error) => Left(error),
+        (data) {
+          final movieList = MovieList.fromJson(data);
+          return Right(movieList.toEntity());
+        },
+      );
+    } catch (e) {
+      return Left(AppException('Failed to fetch favorite movies'));
+    }
+  }
+
+  @override
+  Future<Either<AppException, MovieListEntity>> getWatchlistMovies(
+      int page) async {
+    try {
+      final accountId = await authLocalDataSource.getAccountId();
+      final response = await ApiService.get(
+        '${NetworkRoutes.baserUrl}/account/$accountId/watchlist/movies',
+        queryParameters: {
+          'language': 'en-US',
+          'page': page.toString(),
+          'sort_by': 'created_at.asc'
+        },
+      );
+
+      return response.fold(
+        (error) => Left(error),
+        (data) {
+          final movieList = MovieList.fromJson(data);
+          return Right(movieList.toEntity());
+        },
+      );
+    } catch (e) {
+      return Left(AppException('Failed to fetch watchlist movies'));
+    }
+  }
+
+  @override
   Future<Either<AppException, bool>> addToFavorites(int movieId) async {
     try {
       final accountId = await authLocalDataSource.getAccountId();
       final sessionId = await authLocalDataSource.getSessionId();
-      final response = await ApiService.postApi(
+      final response = await ApiService.post(
         '${NetworkRoutes.baserUrl}/account/$accountId/favorite',
         {'media_type': 'movie', 'media_id': movieId, 'favorite': true},
         queryParameters: {
@@ -69,7 +121,7 @@ class MoviesRepositoryImpl implements MoviesRepository {
     try {
       final accountId = await authLocalDataSource.getAccountId();
       final sessionId = await authLocalDataSource.getSessionId();
-      final response = await ApiService.postApi(
+      final response = await ApiService.post(
         '${NetworkRoutes.baserUrl}/account/$accountId/watchlist',
         {'media_type': 'movie', 'media_id': movieId, 'watchlist': true},
         queryParameters: {

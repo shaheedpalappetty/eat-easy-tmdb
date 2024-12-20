@@ -26,3 +26,9 @@ class Unauthorized extends AppException {
   @override
   String toString() => "Unauthorized: $message";
 }
+
+class ServerErrorException extends AppException {
+  ServerErrorException(super.message);
+  @override
+  String toString() => "Server Error: $message";
+}

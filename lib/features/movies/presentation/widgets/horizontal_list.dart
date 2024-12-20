@@ -1,14 +1,17 @@
 import 'package:eat_easy_assignment/core/utils/imports.dart';
 import 'package:eat_easy_assignment/features/movies/domain/entities/movie_list_entity.dart';
+import 'package:shimmer/shimmer.dart';
 
 class HorizontalList extends StatelessWidget {
   final String title;
   final List<ResultEntity> movies;
+  final bool isLoading;
 
   const HorizontalList({
     super.key,
     required this.title,
     required this.movies,
+    this.isLoading = false,
   });
 
   @override
@@ -25,15 +28,31 @@ class HorizontalList extends StatelessWidget {
           height: 150.h,
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
-            itemCount: movies.length,
+            itemCount: isLoading ? 5 : movies.length,
             separatorBuilder: (_, __) => SizedBox(width: 10.w),
             itemBuilder: (context, index) {
+              if (isLoading) {
+                return Shimmer.fromColors(
+                  baseColor: Colors.grey[300]!,
+                  highlightColor: Colors.grey[100]!,
+                  child: Container(
+                    width: 100.w,
+                    height: 150.h,
+                    decoration: BoxDecoration(
+                      color: Colors.grey[300],
+                      borderRadius: BorderRadius.circular(10.r),
+                    ),
+                  ),
+                );
+              }
+
               final movie = movies[index];
               return InkWell(
                 onTap: () => Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => MovieDetailsScreen(movie: movies[index],
+                    builder: (context) => MovieDetailsScreen(
+                      movie: movies[index],
                       index: movie.id.toString(),
                     ),
                   ),

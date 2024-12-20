@@ -85,9 +85,13 @@ class AuthRepositoryImpl implements AuthRepository {
                 Logger.log("OnPageLoad", type: LogType.error);
 
                 if (url != null && url.toString().contains('allow')) {
-                  Logger.log("Inside Condition", type: LogType.error);
+                  Logger.log("Autentication Approved", type: LogType.success);
 
                   completer.complete(true);
+                  Navigator.pop(context); // Close the web view
+                } else if (url != null && url.toString().contains('deny')) {
+                  Logger.log("Autentication Denied", type: LogType.error);
+                  completer.complete(false);
                   Navigator.pop(context); // Close the web view
                 }
               },

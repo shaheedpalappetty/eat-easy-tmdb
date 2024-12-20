@@ -1,3 +1,4 @@
+import 'package:eat_easy_assignment/core/utils/custom_snackbar.dart';
 import 'package:eat_easy_assignment/core/utils/imports.dart';
 import 'package:eat_easy_assignment/features/movies/presentation/blocs/auth/auth_bloc.dart';
 import 'package:eat_easy_assignment/features/movies/presentation/blocs/auth/auth_event.dart';
@@ -12,6 +13,8 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  String errorMessage = '';
+
   @override
   void initState() {
     super.initState();
@@ -33,18 +36,61 @@ class _SplashScreenState extends State<SplashScreen> {
               MaterialPageRoute(builder: (_) => const MovieListScreen()),
             );
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(state.message)),
-            );
+            setState(() {
+              errorMessage = state.message;
+            });
+            CustomSnackBar.show(
+                context: context,
+                message: state.message,
+                type: SnackBarType.error);
           }
         },
-        child: const Center(
+        child: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              CircularProgressIndicator(),
-              SizedBox(height: 20),
-              Text('Loading...'),
+              if (errorMessage.isEmpty) ...[
+                const CircularProgressIndicator(),
+                SizedBox(height: 20.h),
+                const Text('Loading...'),
+              ] else ...[
+                Icon(
+                  Icons.error_outline,
+                  size: 64.sp,
+                  color: Colors.red,
+                ),
+                SizedBox(height: 16.h),
+                Text(
+                  'Authentication Failed',
+                  style: TextStyle(
+                    fontSize: 20.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+                SizedBox(height: 8.h),
+                Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 32.w),
+                  child: Text(
+                    'Please check your internet connection and try again.',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16.sp,
+                      color: Colors.grey[700],
+                    ),
+                  ),
+                ),
+                SizedBox(height: 24.h),
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      errorMessage = '';
+                    });
+                    context.read<AuthBloc>().add(CheckAuthStatusEvent());
+                  },
+                  child: const Text('Retry'),
+                ),
+              ],
             ],
           ),
         ),

@@ -4,6 +4,7 @@ import 'package:eat_easy_assignment/core/widgets/custom_button.dart';
 import 'package:eat_easy_assignment/features/movies/data/data_model/movie_cast.dart';
 import 'package:eat_easy_assignment/features/movies/domain/entities/movie_list_entity.dart';
 import 'package:eat_easy_assignment/features/movies/presentation/blocs/movie_details/movie_details_bloc.dart';
+import 'package:eat_easy_assignment/features/movies/presentation/blocs/movies/movies_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
@@ -32,7 +33,7 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          widget.movie.title ?? 'Movie Title', // Replace with dynamic title
+          widget.movie.title ?? 'Movie Title',
           style: TextStyle(fontSize: 18.sp),
         ),
         centerTitle: true,
@@ -44,7 +45,6 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Title Image with Border Decoration
               Hero(
                 tag: widget.index,
                 child: Container(
@@ -122,11 +122,13 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
                         message: state.message,
                         type: SnackBarType.error);
                   } else if (state is MovieDetailsLoaded) {
+                    Logger.log("message ${state.message}");
                     if (state.message.isNotEmpty) {
                       CustomSnackBar.show(
                           context: context,
                           message: state.message,
                           type: SnackBarType.success);
+                      context.read<MoviesBloc>().add(FetchMovies());
                     }
                   }
                 },

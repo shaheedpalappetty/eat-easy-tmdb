@@ -1,6 +1,7 @@
 import 'package:eat_easy_assignment/core/utils/imports.dart';
 import 'package:eat_easy_assignment/features/movies/domain/entities/movie_list_entity.dart';
 import 'package:eat_easy_assignment/features/movies/presentation/widgets/pagination.dart';
+import 'package:shimmer/shimmer.dart';
 
 class MoviesList extends StatefulWidget {
   final String title;
@@ -8,6 +9,7 @@ class MoviesList extends StatefulWidget {
   final int currentPage;
   final int totalPages;
   final Function(int) onPageChanged;
+  final bool isLoading;
   // final VoidCallback onLoadMore;
 
   const MoviesList({
@@ -17,6 +19,7 @@ class MoviesList extends StatefulWidget {
     required this.currentPage,
     required this.totalPages,
     required this.onPageChanged,
+    required this.isLoading,
   });
 
   @override
@@ -50,9 +53,28 @@ class _MoviesListState extends State<MoviesList> {
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          itemCount: widget.movies.length,
+          itemCount: 10,
           separatorBuilder: (_, __) => SizedBox(height: 10.h),
           itemBuilder: (context, index) {
+            if (widget.isLoading) {
+              return Shimmer.fromColors(
+                baseColor: Colors.grey[300]!,
+                highlightColor: Colors.grey[100]!,
+                child: Container(
+                  width: 100.w,
+                  height: 150.h,
+                  decoration: BoxDecoration(
+                    color: Colors.grey[300],
+                    borderRadius: BorderRadius.circular(10.r),
+                  ),
+                ),
+              );
+            }
+
+            // Ensure index is valid
+            if (index >= widget.movies.length) {
+              return const SizedBox.shrink();
+            }
             final movie = widget.movies[index];
             return InkWell(
               onTap: () => Navigator.push(
