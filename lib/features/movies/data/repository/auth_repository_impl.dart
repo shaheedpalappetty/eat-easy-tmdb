@@ -1,8 +1,8 @@
-// ignore_for_file: deprecated_member_use
+// ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
 import 'dart:async';
 import 'package:eat_easy_assignment/core/utils/imports.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:eat_easy_assignment/features/movies/presentation/widgets/auth_web_view.dart';
 
 @injectable
 class AuthRepositoryImpl implements AuthRepository {
@@ -57,56 +57,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
   Future<bool> _authorizeRequestToken(
       BuildContext context, String requestToken) async {
-    try {
-      final String url = '${NetworkRoutes.authenticate}$requestToken';
-
-      // Create a Completer to wait for the result
-      final Completer<bool> completer = Completer<bool>();
-
-      // Create the WebView and navigate to it  (///Todo Move this to UI part)
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Scaffold(
-            appBar: AppBar(title: const Text("Authenticate")),
-            body: InAppWebView(
-              initialUrlRequest: URLRequest(url: WebUri(url)),
-              onLoadStop: (controller, url) async {
-                Logger.log("OnPageLoad", type: LogType.error);
-
-                if (url != null && url.toString().contains('allow')) {
-                  Logger.log("Autentication Approved", type: LogType.success);
-
-                  completer.complete(true);
-                  // Close the web view
-                  Navigator.pop(context);
-                } else if (url != null && url.toString().contains('deny')) {
-                  Logger.log("Autentication Denied", type: LogType.error);
-                  completer.complete(false);
-                  // Close the web view
-                  Navigator.pop(context);
-                }
-              },
-              onLoadError: (controller, url, code, message) {
-                Logger.log("onLoadError", type: LogType.error);
-
-                completer.complete(false);
-                // Close the web view
-                Navigator.pop(context);
-              },
-            ),
-          ),
-        ),
-      );
-
-      // Wait for the result (either success or failure)
-      return await completer.future.timeout(
-        const Duration(minutes: 5),
-        onTimeout: () => false,
-      );
-    } catch (e) {
-      return false;
-    }
+    return await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) =>
+            AuthWebView(url: '${NetworkRoutes.authenticate}$requestToken'),
+      ),
+    );
   }
 
   @override
