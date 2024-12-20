@@ -51,7 +51,7 @@ class _MovieListScreenState extends State<MovieListScreen> {
                       SizedBox(height: 16.h),
                       MoviesList(
                         title: 'Movies List',
-                        movies: [],
+                        movies: const [],
                         currentPage: 0,
                         totalPages: 0,
                         onPageChanged: (page) {},
