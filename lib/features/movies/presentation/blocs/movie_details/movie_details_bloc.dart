@@ -20,22 +20,47 @@ class MovieDetailsBloc extends Bloc<MovieDetailsEvent, MovieDetailsState> {
       final result = await repository.getCastsDetails(event.movieId);
       result.fold(
         (error) => emit(MovieDetailsError(error.message)),
-        (cast) => emit(MovieDetailsLoaded(cast)),
+        (cast) => emit(MovieDetailsLoaded(cast: cast)),
       );
     } catch (e) {
       emit(MovieDetailsError("An unexpected error occurred"));
     }
   }
 
-  void _onAddToFavourites(
-      AddToFavouritesEvent event, Emitter<MovieDetailsState> emit) {
-    // Add logic to handle adding to favourites
-    emit(AddToFavouritesSuccess(event.movieId));
+  Future<void> _onAddToFavourites(
+      AddToFavouritesEvent event, Emitter<MovieDetailsState> emit) async {
+    if (state is MovieDetailsLoaded) {
+      emit((state as MovieDetailsLoaded).copyWith(isAddingToFavorites: true));
+    }
+    try {
+      final result = await repository.addToFavorites(event.movieId);
+      result.fold(
+        (error) => emit(MovieDetailsError("Failed to Add Favourites")),
+        (_) => emit((state as MovieDetailsLoaded).copyWith(
+          isAddingToFavorites: false,
+        )),
+      );
+    } catch (e) {
+      emit(MovieDetailsError("An unexpected error occurred"));
+    }
   }
 
-  void _onAddToWatchList(
-      AddToWatchListEvent event, Emitter<MovieDetailsState> emit) {
-    // Add logic to handle adding to the watchlist
-    emit(AddToWatchListSuccess(event.movieId));
+  Future<void> _onAddToWatchList(
+      AddToWatchListEvent event, Emitter<MovieDetailsState> emit) async {
+    if (state is MovieDetailsLoaded) {
+      emit((state as MovieDetailsLoaded)
+          .copyWith(isAddingToWatchList: true, message: "Added to Favourites"));
+    }
+
+    try {
+      final result = await repository.addToWatchlist(event.movieId);
+      result.fold(
+        (error) => emit(MovieDetailsError("Failed to Add WatchList")),
+        (_) => emit((state as MovieDetailsLoaded).copyWith(
+            isAddingToWatchList: false, message: "Added to WatchLists")),
+      );
+    } catch (e) {
+      emit(MovieDetailsError("An unexpected error occurred"));
+    }
   }
 }

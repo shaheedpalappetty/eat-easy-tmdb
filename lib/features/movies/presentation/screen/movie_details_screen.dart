@@ -1,5 +1,7 @@
+import 'package:eat_easy_assignment/core/utils/custom_snackbar.dart';
 import 'package:eat_easy_assignment/core/utils/imports.dart';
 import 'package:eat_easy_assignment/core/widgets/custom_button.dart';
+import 'package:eat_easy_assignment/features/movies/data/data_model/movie_cast.dart';
 import 'package:eat_easy_assignment/features/movies/domain/entities/movie_list_entity.dart';
 import 'package:eat_easy_assignment/features/movies/presentation/blocs/movie_details/movie_details_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -15,6 +17,8 @@ class MovieDetailsScreen extends StatefulWidget {
 }
 
 class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
+  bool addToFavouritesLoading = false;
+  bool addToWatchListLoading = false;
   @override
   void initState() {
     super.initState();
@@ -110,93 +114,128 @@ class _MovieDetailsScreenState extends State<MovieDetailsScreen> {
               ),
               SizedBox(height: 8.h),
               // Inside the Column, replace the Cast Section with this:
-              BlocBuilder<MovieDetailsBloc, MovieDetailsState>(
-                builder: (context, state) {
-                  if (state is MovieDetailsLoading) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
-                    );
+              BlocConsumer<MovieDetailsBloc, MovieDetailsState>(
+                listener: (context, state) {
+                  if (state is MovieDetailsError) {
+                    CustomSnackBar.show(
+                        context: context,
+                        message: state.message,
+                        type: SnackBarType.error);
                   } else if (state is MovieDetailsLoaded) {
-                    final castList =
-                        state.cast; // Assuming cast is a list in your state
-                    if (castList.isEmpty) {
-                      return Center(
-                        child: Text(
-                          'No cast details available',
-                          style: TextStyle(fontSize: 14.sp),
-                        ),
-                      );
+                    if (state.message.isNotEmpty) {
+                      CustomSnackBar.show(
+                          context: context,
+                          message: state.message,
+                          type: SnackBarType.success);
                     }
-                    return SizedBox(
-                      height: 120.h,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: castList.length,
-                        separatorBuilder: (_, __) => SizedBox(width: 10.w),
-                        itemBuilder: (context, index) {
-                          final castMember = castList[index];
-                          return Column(
-                            children: [
-                              // Cast Image
-                              Container(
-                                width: 60.w,
-                                height: 60.h,
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(30.r),
-                                  image: castMember.profilePath != null
-                                      ? DecorationImage(
-                                          image: NetworkImage(
-                                            'https://image.tmdb.org/t/p/w200${castMember.profilePath}',
-                                          ),
-                                          fit: BoxFit.cover,
-                                        )
-                                      : null,
-                                  color: Colors.grey[400],
-                                ),
-                              ),
-                              SizedBox(height: 8.h),
-                              // Cast Name
-                              Text(
-                                castMember.name ?? 'Unknown',
-                                style: TextStyle(
-                                    fontSize: 12.sp,
-                                    fontWeight: FontWeight.bold),
-                                textAlign: TextAlign.center,
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    );
-                  } else if (state is MovieDetailsError) {
-                    return Center(
-                      child: Text(
-                        'Failed to load cast details.',
-                        style: TextStyle(fontSize: 14.sp, color: Colors.red),
-                      ),
-                    );
                   }
-                  return const SizedBox
-                      .shrink(); // Fallback in case of an unexpected state
+                },
+                builder: (context, state) {
+                  List<Cast> castList = [];
+                  bool addToFavouritesLoading = false;
+                  bool addToWatchListLoading = false;
+
+                  if (state is MovieDetailsLoaded) {
+                    addToFavouritesLoading = state.isAddingToFavorites;
+                    addToWatchListLoading = state.isAddingToWatchList;
+                    castList = state.cast.cast
+                            ?.map((castEntity) => Cast(
+                                  id: castEntity.id,
+                                  name: castEntity.name,
+                                  profilePath: castEntity.profilePath,
+                                ))
+                            .toList() ??
+                        [];
+                  }
+
+                  return Column(
+                    children: [
+                      // Cast Section
+                      SizedBox(
+                        height: 120.h,
+                        child: state is MovieDetailsError
+                            ? Center(
+                                child: Text(
+                                  'Error fetching cast details.',
+                                  style: TextStyle(
+                                      fontSize: 14.sp, color: Colors.red),
+                                ),
+                              )
+                            : castList.isEmpty
+                                ? Center(
+                                    child: Text(
+                                      'No cast details available.',
+                                      style: TextStyle(fontSize: 14.sp),
+                                    ),
+                                  )
+                                : ListView.separated(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: castList.length,
+                                    separatorBuilder: (_, __) =>
+                                        SizedBox(width: 10.w),
+                                    itemBuilder: (context, index) {
+                                      final castMember = castList[index];
+                                      return Column(
+                                        children: [
+                                          // Cast Image
+                                          Container(
+                                            width: 60.w,
+                                            height: 60.h,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(30.r),
+                                              image:
+                                                  castMember.profilePath != null
+                                                      ? DecorationImage(
+                                                          image: NetworkImage(
+                                                            'https://image.tmdb.org/t/p/w200${castMember.profilePath}',
+                                                          ),
+                                                          fit: BoxFit.cover,
+                                                        )
+                                                      : null,
+                                              color: Colors.grey[400],
+                                            ),
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          // Cast Name
+                                          Text(
+                                            castMember.name ?? 'Unknown',
+                                            style: TextStyle(
+                                                fontSize: 12.sp,
+                                                fontWeight: FontWeight.bold),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
+                      ),
+                      SizedBox(height: 16.h),
+                      // Buttons Section
+                      Row(
+                        children: [
+                          CustomButton(
+                            isLoading: addToFavouritesLoading,
+                            buttonText: 'Add to Favorites',
+                            onTap: () => context.read<MovieDetailsBloc>().add(
+                                AddToFavouritesEvent(widget.movie.id ?? 0)),
+                          ),
+                          SizedBox(width: 0.04.sw),
+                          CustomButton(
+                            isLoading: addToWatchListLoading,
+                            buttonText: 'Add to Watchlist',
+                            onTap: () => context
+                                .read<MovieDetailsBloc>()
+                                .add(AddToWatchListEvent(widget.movie.id ?? 0)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  );
                 },
               ),
 
               SizedBox(height: 16.h),
-
-              // Buttons for Add to Favorites and Add to Watchlist
-              Row(
-                children: [
-                  CustomButton(
-                    buttonText: 'Add to Favorites',
-                    onTap: () {},
-                  ),
-                  SizedBox(width: 0.04.sw),
-                  CustomButton(
-                    buttonText: 'Add to Watchlist',
-                    onTap: () {},
-                  ),
-                ],
-              ),
             ],
           ),
         ),

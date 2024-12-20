@@ -1,5 +1,3 @@
-// movie_cast.dart
-
 import 'dart:convert';
 import 'package:eat_easy_assignment/features/movies/domain/entities/movie_cast_entity.dart';
 
@@ -33,8 +31,8 @@ class MovieCast {
   // Converts MovieCast to MovieCastEntity (domain model)
   MovieCastEntity toEntity() {
     return MovieCastEntity(
-      id: this.id,
-      cast: this.cast?.map((cast) => cast.toEntity()).toList(),
+      id: id,
+      cast: cast?.map((cast) => cast.toEntity()).toList(),
     );
   }
 }
@@ -102,18 +100,18 @@ class Cast {
   // Converts Cast to CastEntity (domain model)
   CastEntity toEntity() {
     return CastEntity(
-      adult: this.adult,
-      gender: this.gender,
-      id: this.id,
-      knownForDepartment: this.knownForDepartment,
-      name: this.name,
-      originalName: this.originalName,
-      popularity: this.popularity,
-      profilePath: this.profilePath,
-      castId: this.castId,
-      character: this.character,
-      creditId: this.creditId,
-      order: this.order,
+      adult: adult,
+      gender: gender,
+      id: id,
+      knownForDepartment: knownForDepartment,
+      name: name,
+      originalName: originalName,
+      popularity: popularity,
+      profilePath: profilePath,
+      castId: castId,
+      character: character,
+      creditId: creditId,
+      order: order,
     );
   }
 }

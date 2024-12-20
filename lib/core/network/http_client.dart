@@ -5,11 +5,15 @@ import 'package:http/http.dart' as http;
 import 'package:eat_easy_assignment/core/utils/imports.dart';
 
 class ApiService {
-  static Map<String, String> _header = {
-    "accept": "application/json",
+  // static Map<String, String> _header = {
+  //   "accept": "application/json",
+  //   "Authorization": "Bearer ${Config.accessToken}"
+  // };
+  static final Map<String, String> _header = {
+    'accept': 'application/json',
+    'content-type': 'application/json',
     "Authorization": "Bearer ${Config.accessToken}"
   };
-
   // static Future<void> _addToken() async {
   //   final token = await SharedPrefModel.instance.getData("token");
   //   if (token != null) {
@@ -17,12 +21,10 @@ class ApiService {
   //   }
   // }
 
-  static EitherResponse postApi(
-    String url,
-    Map map,
-  ) async {
+  static EitherResponse postApi(String url, Map map,
+      {Map<String, dynamic>? queryParameters}) async {
     // await _addToken();
-    final uri = Uri.parse(url);
+    final uri = Uri.parse(url).replace(queryParameters: queryParameters);
 
     final body = jsonEncode(map);
     Logger.log('POST Request: $url\n[HEADERS]: $_header\n[BODY]: $body',
@@ -60,8 +62,9 @@ class ApiService {
     }
   }
 
-  static EitherResponse getApi(String url) async {
-    final uri = Uri.parse(url);
+  static EitherResponse getApi(String url,
+      {Map<String, dynamic>? queryParameters}) async {
+    final uri = Uri.parse(url).replace(queryParameters: queryParameters);
     // await _addToken();
     Logger.log('GET Request: $url\n[HEADERS]: $_header', type: LogType.info);
     try {
