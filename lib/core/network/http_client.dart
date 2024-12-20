@@ -1,4 +1,3 @@
-import 'package:eat_easy_assignment/config.dart';
 import 'package:http/http.dart' as http;
 import 'package:eat_easy_assignment/core/utils/imports.dart';
 

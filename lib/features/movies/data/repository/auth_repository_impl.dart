@@ -1,19 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'dart:async';
-
-import 'package:eat_easy_assignment/core/exceptions/app_exception.dart';
 import 'package:eat_easy_assignment/core/utils/imports.dart';
-import 'package:eat_easy_assignment/features/movies/data/datasources/auth_local_datasource.dart';
-import 'package:eat_easy_assignment/features/movies/data/datasources/auth_remote_datasource.dart';
-import 'package:eat_easy_assignment/features/movies/data/datasources/auth_state_manager.dart';
-import 'package:eat_easy_assignment/features/movies/domain/auth_repository.dart';
-import 'package:eat_easy_assignment/features/movies/domain/entities/auth_entity.dart';
-import 'package:either_dart/either.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:flutter/material.dart';
 
+@injectable
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
   final AuthLocalDataSource localDataSource;
@@ -40,13 +31,13 @@ class AuthRepositoryImpl implements AuthRepository {
 
       // Step 3: Create session with authorized token
       final sessionId = await remoteDataSource.createSession(requestToken);
-      if (sessionId == null) {
+      if (sessionId == 'tmdb_session_id') {
         return Left(AppException('Failed to create session ID'));
       }
 
       // Step 4: Get account ID using session
       final accountId = await remoteDataSource.getAccountId(sessionId);
-      if (accountId == null) {
+      if (accountId == 'tmdb_account_id') {
         return Left(AppException('Failed to fetch account ID'));
       }
 
@@ -67,8 +58,7 @@ class AuthRepositoryImpl implements AuthRepository {
   Future<bool> _authorizeRequestToken(
       BuildContext context, String requestToken) async {
     try {
-      final String url =
-          'https://www.themoviedb.org/authenticate/$requestToken';
+      final String url = '${NetworkRoutes.authenticate}$requestToken';
 
       // Create a Completer to wait for the result
       final Completer<bool> completer = Completer<bool>();
@@ -88,18 +78,21 @@ class AuthRepositoryImpl implements AuthRepository {
                   Logger.log("Autentication Approved", type: LogType.success);
 
                   completer.complete(true);
-                  Navigator.pop(context); // Close the web view
+                  // Close the web view
+                  Navigator.pop(context);
                 } else if (url != null && url.toString().contains('deny')) {
                   Logger.log("Autentication Denied", type: LogType.error);
                   completer.complete(false);
-                  Navigator.pop(context); // Close the web view
+                  // Close the web view
+                  Navigator.pop(context);
                 }
               },
               onLoadError: (controller, url, code, message) {
                 Logger.log("onLoadError", type: LogType.error);
 
                 completer.complete(false);
-                Navigator.pop(context); // Close the web view
+                // Close the web view
+                Navigator.pop(context);
               },
             ),
           ),
@@ -112,7 +105,6 @@ class AuthRepositoryImpl implements AuthRepository {
         onTimeout: () => false,
       );
     } catch (e) {
-      // Handle any errors
       return false;
     }
   }

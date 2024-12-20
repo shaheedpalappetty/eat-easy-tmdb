@@ -1,46 +1,13 @@
-import 'package:eat_easy_assignment/core/network/http_client.dart';
 import 'package:eat_easy_assignment/core/utils/imports.dart';
-import 'package:eat_easy_assignment/features/movies/data/datasources/auth_local_datasource.dart';
-import 'package:eat_easy_assignment/features/movies/data/datasources/auth_remote_datasource.dart';
-import 'package:eat_easy_assignment/features/movies/data/datasources/auth_state_manager.dart';
-import 'package:eat_easy_assignment/features/movies/data/repository/auth_local_datasource_impl.dart';
-import 'package:eat_easy_assignment/features/movies/data/repository/auth_remote_datasource_impl.dart';
-import 'package:eat_easy_assignment/features/movies/data/repository/auth_repository_impl.dart';
-import 'package:eat_easy_assignment/features/movies/data/repository/movies_repository_impl.dart';
-import 'package:eat_easy_assignment/features/movies/domain/movies_repository.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/auth/auth_bloc.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/movie_details/movie_details_bloc.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/movies/movies_bloc.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/screen/splash_screen.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final prefs = await SharedPreferences.getInstance();
-  final authStateManager = AuthStateManager();
-  final authLocalDataSource = AuthLocalDataSourceImpl(prefs: prefs);
-  final authRemoteDataSource = AuthRemoteDataSourceImpl();
-
-  final authRepository = AuthRepositoryImpl(
-    remoteDataSource: authRemoteDataSource,
-    localDataSource: authLocalDataSource,
-    authStateManager: authStateManager,
-  );
-
-  final authBloc = AuthBloc(authRepository: authRepository);
-  runApp(MyApp(
-    authBloc: authBloc,
-    authLocalDataSource: authLocalDataSource,
-  ));
+  await configureDependencies();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  final AuthBloc authBloc;
-  final AuthLocalDataSource authLocalDataSource;
-  const MyApp(
-      {super.key, required this.authBloc, required this.authLocalDataSource});
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,22 +17,11 @@ class MyApp extends StatelessWidget {
       splitScreenMode: true,
       builder: (_, child) => MultiProvider(
         providers: [
-          BlocProvider<AuthBloc>.value(
-            value: authBloc,
-          ),
-          Provider<MoviesRepository>(
-            create: (_) => MoviesRepositoryImpl(authLocalDataSource),
-          ),
-          BlocProvider<MoviesBloc>(
-            create: (context) => MoviesBloc(
-              context.read<MoviesRepository>(),
-            )..add(FetchMovies()),
-          ),
+          BlocProvider<AuthBloc>(create: (_) => getIt<AuthBloc>()),
+          Provider<MoviesRepository>(create: (_) => getIt<MoviesRepository>()),
+          BlocProvider<MoviesBloc>(create: (_) => getIt<MoviesBloc>()),
           BlocProvider<MovieDetailsBloc>(
-            create: (context) => MovieDetailsBloc(
-              repository: context.read<MoviesRepository>(),
-            ),
-          ),
+              create: (_) => getIt<MovieDetailsBloc>()),
         ],
         child: MaterialApp(
           debugShowCheckedModeBanner: false,

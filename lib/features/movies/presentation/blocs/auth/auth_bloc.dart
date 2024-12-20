@@ -1,7 +1,4 @@
-import 'package:eat_easy_assignment/features/movies/domain/auth_repository.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/auth/auth_event.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/auth/auth_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:eat_easy_assignment/core/utils/imports.dart';
 
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository authRepository;

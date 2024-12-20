@@ -1,9 +1,4 @@
-import 'package:eat_easy_assignment/core/utils/custom_snackbar.dart';
 import 'package:eat_easy_assignment/core/utils/imports.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/auth/auth_bloc.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/auth/auth_event.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/auth/auth_state.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

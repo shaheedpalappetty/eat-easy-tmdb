@@ -1,9 +1,4 @@
-import 'dart:async';
-
-import 'package:bloc/bloc.dart';
-import 'package:eat_easy_assignment/core/logger/logger.dart';
-import 'package:eat_easy_assignment/features/movies/domain/entities/movie_list_entity.dart';
-import 'package:eat_easy_assignment/features/movies/domain/movies_repository.dart';
+import 'package:eat_easy_assignment/core/utils/imports.dart';
 
 part 'movies_event.dart';
 part 'movies_state.dart';

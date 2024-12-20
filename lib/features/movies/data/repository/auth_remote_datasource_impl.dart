@@ -1,13 +1,11 @@
-import 'package:eat_easy_assignment/core/network/http_client.dart';
-import 'package:eat_easy_assignment/core/network/network_routes.dart';
-import 'package:eat_easy_assignment/features/movies/data/datasources/auth_remote_datasource.dart';
+import 'package:eat_easy_assignment/core/utils/imports.dart';
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   AuthRemoteDataSourceImpl();
   @override
   Future<String> getRequestToken() async {
     final response = await ApiService.get(
-      '${NetworkRoutes.baserUrl}authentication/token/new', // Removed base URL as it should be handled in ApiService
+      '${NetworkRoutes.baserUrl}${NetworkRoutes.requestToken}',
     );
 
     return response.fold(
@@ -24,7 +22,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   @override
   Future<String> createSession(String requestToken) async {
     final response = await ApiService.post(
-      '${NetworkRoutes.baserUrl}authentication/session/new',
+      '${NetworkRoutes.baserUrl}${NetworkRoutes.createSession}',
       {'request_token': requestToken},
     );
 

@@ -1,6 +1,5 @@
-import 'package:bloc/bloc.dart';
-import 'package:eat_easy_assignment/features/movies/domain/entities/movie_cast_entity.dart';
-import 'package:eat_easy_assignment/features/movies/domain/movies_repository.dart';
+import 'package:eat_easy_assignment/core/utils/imports.dart';
+
 part 'movie_details_event.dart';
 part 'movie_details_state.dart';
 

@@ -1,7 +1,4 @@
-import 'package:eat_easy_assignment/core/utils/custom_snackbar.dart';
 import 'package:eat_easy_assignment/core/utils/imports.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/movies/movies_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MovieListScreen extends StatefulWidget {
   const MovieListScreen({super.key});

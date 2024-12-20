@@ -1,17 +1,9 @@
-import 'package:eat_easy_assignment/core/utils/custom_snackbar.dart';
 import 'package:eat_easy_assignment/core/utils/imports.dart';
-import 'package:eat_easy_assignment/core/widgets/custom_button.dart';
-import 'package:eat_easy_assignment/features/movies/data/data_model/movie_cast.dart';
-import 'package:eat_easy_assignment/features/movies/domain/entities/movie_list_entity.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/movie_details/movie_details_bloc.dart';
-import 'package:eat_easy_assignment/features/movies/presentation/blocs/movies/movies_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class MovieDetailsScreen extends StatefulWidget {
   final ResultEntity movie;
   final String tag;
-  const MovieDetailsScreen(
-      {super.key, required this.tag, required this.movie});
+  const MovieDetailsScreen({super.key, required this.tag, required this.movie});
 
   @override
   State<MovieDetailsScreen> createState() => _MovieDetailsScreenState();

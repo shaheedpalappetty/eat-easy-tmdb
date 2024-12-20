@@ -1,5 +1,4 @@
-import 'package:eat_easy_assignment/features/movies/data/datasources/auth_local_datasource.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:eat_easy_assignment/core/utils/imports.dart';
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   final SharedPreferences prefs;

@@ -1,5 +1,3 @@
-// movie_cast_entity.dart
-
 class MovieCastEntity {
   final int? id;
   final List<CastEntity>? cast;
